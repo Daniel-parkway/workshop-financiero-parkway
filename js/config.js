@@ -85,7 +85,7 @@ const CONFIG = {
      seguirá funcionando pero SOLO guardará el registro en el
      navegador (localStorage) y no lo enviará a ningún lado.
      ------------------------------------------------------------ */
-  googleSheetsEndpoint: "REEMPLAZAR-CON-TU-URL-DE-APPS-SCRIPT",
+  googleSheetsEndpoint: "https://script.google.com/macros/s/AKfycbx35VCD31K0fp4Yby7K7vmfqp4uIPRb8eJbY1U7MrjGdUSVFGrV7WUYDmqKdpLL4-rp/exec",
 
   /* ------------------------------------------------------------
      MARCA
