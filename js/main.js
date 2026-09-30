@@ -19,7 +19,9 @@
   document.addEventListener("DOMContentLoaded", init);
 
   function init() {
+    wireIntro();
     cacheEls();
+    renderTicker();
     renderYear();
     renderFechas();
     renderPricing();
@@ -44,7 +46,8 @@
     els.year = document.getElementById("year");
     els.whatsappFloat = document.getElementById("whatsappFloat");
     els.authorityGrid = document.getElementById("authorityGrid");
-    els.brandLogoBadge = document.getElementById("brandLogoBadge");
+    els.headerLogoText = document.getElementById("headerLogoText");
+    els.headerLogoImg = document.getElementById("headerLogoImg");
     els.resourcesImage = document.getElementById("resourcesImage");
   }
 
@@ -54,8 +57,20 @@
      nombre correcto, aparecen automáticamente. */
 
   function wireOptionalImages() {
-    showImageIfExists(els.brandLogoBadge, CONFIG.brand && CONFIG.brand.logo);
+    wireHeaderLogo();
     showImageIfExists(els.resourcesImage, CONFIG.resourcesImage);
+  }
+
+  function wireHeaderLogo() {
+    const src = CONFIG.brand && CONFIG.brand.headerLogo;
+    if (!els.headerLogoImg || !els.headerLogoText || !src) return;
+    const probe = new Image();
+    probe.onload = () => {
+      els.headerLogoImg.src = src;
+      els.headerLogoImg.hidden = false;
+      els.headerLogoText.hidden = true;
+    };
+    probe.src = src;
   }
 
   function showImageIfExists(imgEl, src) {
@@ -85,6 +100,7 @@
       const probe = new Image();
       probe.onload = () => {
         photoWrap.style.backgroundImage = `url("${p.photo}")`;
+        photoWrap.classList.remove("authority-photo--placeholder");
         photoWrap.classList.add("has-photo");
         photoWrap.textContent = "";
       };
@@ -108,6 +124,71 @@
 
   function renderYear() {
     if (els.year) els.year.textContent = new Date().getFullYear();
+  }
+
+  /* ---------------- BANDA DE PRECIOS ---------------- */
+
+  function renderTicker() {
+    const track = document.getElementById("tickerTrack");
+    if (!track || !CONFIG.tickerItems || !CONFIG.tickerItems.length) return;
+    const itemsHTML = CONFIG.tickerItems.map(tickerItemHTML).join("");
+    /* se duplica el contenido para que el desplazamiento sea continuo */
+    track.innerHTML = itemsHTML + itemsHTML;
+  }
+
+  function tickerItemHTML(item) {
+    const arrow = item.direction === "down" ? "▼" : "▲";
+    return `
+      <span class="ticker-item">
+        <span class="ticker-symbol">${item.symbol}</span>
+        <span class="ticker-price">${item.price}</span>
+        <span class="ticker-change is-${item.direction}">${arrow} ${item.change}</span>
+      </span>
+    `;
+  }
+
+  /* ---------------- INTRO VIDEO (VSL VERTICAL) ---------------- */
+
+  function wireIntro() {
+    const gate = document.getElementById("introGate");
+    const video = document.getElementById("introVideo");
+    const poster = document.getElementById("introPoster");
+    const playBtn = document.getElementById("introPlay");
+    const skipBtn = document.getElementById("introSkip");
+    if (!gate || !video) return;
+
+    document.body.classList.add("intro-locked");
+
+    function closeIntro() {
+      if (gate.classList.contains("is-closing")) return;
+      gate.classList.add("is-closing");
+      document.body.classList.remove("intro-locked");
+      video.pause();
+      setTimeout(() => gate.classList.add("is-hidden"), 500);
+    }
+
+    video.addEventListener("playing", () => {
+      if (poster) poster.classList.add("is-hidden");
+    });
+
+    if (playBtn) {
+      playBtn.addEventListener("click", () => {
+        playBtn.classList.add("is-hidden");
+        video.play().catch(() => {
+          /* si el navegador bloquea el play automático, se puede reintentar con los controles nativos */
+          video.setAttribute("controls", "");
+        });
+      });
+    }
+
+    if (skipBtn) skipBtn.addEventListener("click", closeIntro);
+    video.addEventListener("ended", closeIntro);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !gate.classList.contains("is-hidden")) {
+        closeIntro();
+      }
+    });
   }
 
   /* ---------------- REVEAL AL HACER SCROLL ---------------- */

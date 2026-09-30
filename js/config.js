@@ -7,6 +7,23 @@
 const CONFIG = {
 
   /* ------------------------------------------------------------
+     BANDA DE PRECIOS (estilo bolsa de valores)
+     Franja decorativa con datos de mercado que se desliza debajo
+     del header. Son valores de referencia (no en vivo) — puedes
+     editarlos cuando quieras para que se vean actualizados.
+     - direction: "up" o "down" (controla el color de la flecha)
+     ------------------------------------------------------------ */
+  tickerItems: [
+    { symbol: "S&P 500", price: "5,738.42", change: "+0.62%", direction: "up" },
+    { symbol: "NASDAQ", price: "18,342.10", change: "+0.94%", direction: "up" },
+    { symbol: "DOW JONES", price: "42,180.75", change: "+0.44%", direction: "up" },
+    { symbol: "USD/COP", price: "4,050.30", change: "-0.18%", direction: "down" },
+    { symbol: "ORO", price: "2,634.50", change: "+0.31%", direction: "up" },
+    { symbol: "BTC", price: "97,250.00", change: "+2.15%", direction: "up" },
+    { symbol: "PETRÓLEO WTI", price: "71.85", change: "-0.52%", direction: "down" }
+  ],
+
+  /* ------------------------------------------------------------
      FECHAS DEL WORKSHOP
      Agrega, elimina o edita las fechas disponibles aquí.
      - id: identificador único (no lo repitas)
@@ -89,14 +106,15 @@ const CONFIG = {
 
   /* ------------------------------------------------------------
      MARCA
-     - logo: opcional. Si guardas assets/logo-workshop.png se muestra
-       como sello sobre la sección de autoridad. Si no existe, se oculta
-       automáticamente y no rompe nada.
+     - headerLogo: opcional. Si guardas assets/logo-header.png (o el
+       nombre que pongas aquí) se muestra en el encabezado en vez de
+       la palabra "PARKway". Si no existe, se sigue viendo el texto
+       y no rompe nada.
      ------------------------------------------------------------ */
   brand: {
     name: "Parkway",
     workshopName: "Workshop Financiero",
-    logo: "assets/logo-workshop.png",
+    headerLogo: "assets/logo-header.png",
     instructors: [
       {
         name: "Fabio",
